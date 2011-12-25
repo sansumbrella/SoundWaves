@@ -35,30 +35,30 @@ window.requestAnimFrame = (function(){
     })();
 
 var pacific = function () {
-	var that = {};
+	var app = {};
 	var context;
 	var particles = [];
-	that.setup = function() {
+	app.setup = function() {
 		console.log("Setup Pacific");
 	}
-	that.update = function() {
+	app.update = function() {
 		console.log("update");
-		that.draw();
-		requestAnimFrame(that.update);
+		app.draw();
+		requestAnimFrame(app.update);
 	}
-	that.draw = function() {
+	app.draw = function() {
 		console.log("draw");
 	}
-	that.run = function() {
+	app.run = function() {
 		console.log("Running Pacific");
 		var canvas = document.getElementById("pacific");
 		context = canvas.getContext('2d');
 		context.fillStyle = "rgb(200,0,0)";
 		context.fillRect( 50, 10, 100, 100 );
-		that.update();
+		app.update();
 	}
 	
-	return that;
+	return app;
 }();
 
 $(document).ready( function(){
@@ -68,7 +68,6 @@ $(document).ready( function(){
 	}
 	pacific.setup();
 	pacific.run();
-	console.log( pacific.value );
 })
 
 
