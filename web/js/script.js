@@ -20,10 +20,6 @@ var createParticle = function ( startX, startY ) {
 		draw: function (context) {
 			context.fillStyle = style;
 			context.fillRect( x, y, 4, 4 );
-		},
-		clear: function(context, style) {
-			context.fillStyle = style;
-			context.fillRect( x, y, 4, 4 );
 		}
 	};
 };
@@ -44,26 +40,31 @@ var pacific = function () {
 	var app = {};
 	var context;
 	var particles = [];
-	var bgStyle = "rgb(255,255,255)";
+	var w = 640;
+	var h = 480;
+	var fillStyle = "rgb(255,200,255)";
 	
 	var createParticles = function(){
 		console.log("Yo, got some context: " + context);
 		console.log("Creating particles");
 		
 		for( var i = 0; i != 10; ++i ){
-			particles.push( createParticle( Math.random()*640, Math.random()*480 ) );
+			particles.push( createParticle( Math.random()*w, Math.random()*h/2 ) );
 		}
 	}
 	
 	// public interface
 	app.setup = function() {
 		var canvas = document.getElementById("pacific");
+		canvas.width = w;
+		canvas.height = h;
 		context = canvas.getContext('2d');
 		createParticles();
 	}
 	app.update = function() {
+		context.fillStyle = fillStyle;
+		context.fillRect(0,0,w,h);
 		for( var i in particles ){
-			particles[i].clear(context, bgStyle);
 			particles[i].update();
 		}
 		app.draw();
