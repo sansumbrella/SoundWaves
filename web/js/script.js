@@ -2,11 +2,12 @@
 
 */
 
-var particle = function ( startX, startY ) {
+var createParticle = function ( startX, startY ) {
 	var x = startX;
 	var y = startY;
 	var vx = 0;
 	var vy = 1;
+	var style = "rgb(200,200,0)";
 	return {
 		setPos: function(tx, ty){
 			x = tx;
@@ -17,8 +18,12 @@ var particle = function ( startX, startY ) {
 			y += vy;
 		},
 		draw: function (context) {
-			context.fillStyle = "rgb(200,200,0)";
-			context.fillRect( x, y )
+			context.fillStyle = style;
+			context.fillRect( x, y, 4, 4 );
+		},
+		clear: function(context, style) {
+			context.fillStyle = style;
+			context.fillRect( x, y, 4, 4 );
 		}
 	};
 };
@@ -35,26 +40,42 @@ window.requestAnimFrame = (function(){
     })();
 
 var pacific = function () {
+	// private members
 	var app = {};
 	var context;
 	var particles = [];
+	var bgStyle = "rgb(255,255,255)";
+	
+	var createParticles = function(){
+		console.log("Yo, got some context: " + context);
+		console.log("Creating particles");
+		
+		for( var i = 0; i != 10; ++i ){
+			particles.push( createParticle( Math.random()*640, Math.random()*480 ) );
+		}
+	}
+	
+	// public interface
 	app.setup = function() {
-		console.log("Setup Pacific");
+		var canvas = document.getElementById("pacific");
+		context = canvas.getContext('2d');
+		createParticles();
 	}
 	app.update = function() {
-		console.log("update");
+		for( var i in particles ){
+			particles[i].clear(context, bgStyle);
+			particles[i].update();
+		}
 		app.draw();
 		requestAnimFrame(app.update);
 	}
 	app.draw = function() {
-		console.log("draw");
+		for( var i in particles ){
+			particles[i].draw(context);
+		}
 	}
 	app.run = function() {
 		console.log("Running Pacific");
-		var canvas = document.getElementById("pacific");
-		context = canvas.getContext('2d');
-		context.fillStyle = "rgb(200,0,0)";
-		context.fillRect( 50, 10, 100, 100 );
 		app.update();
 	}
 	
@@ -62,7 +83,6 @@ var pacific = function () {
 }();
 
 $(document).ready( function(){
-	console.log("Ready for action, mister");
 	for( var i in pacific ){
 		console.log( i + " : " + pacific[i])
 	}
