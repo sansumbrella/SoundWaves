@@ -35,34 +35,37 @@ window.requestAnimFrame = (function(){
     })();
 
 var pacific = function () {
-	// var that = this;
+	var that = {};
 	var context;
 	var particles = [];
-	return {
-		// why can't these functions see each other/themselves?
-		setup: function () {
-			console.log("Setup Pacific");
-		},
-		update: function () {
-			console.log("update");
-			draw();
-		},
-		draw: function () {
-			console.log("draw");
-		},
-		run: function () {
-			console.log("Running Pacific");
-			var canvas = document.getElementById("pacific");
-			context = canvas.getContext('2d');
-			context.fillStyle = "rgb(200,0,0)";
-			context.fillRect( 50, 10, 100, 100 );
-			update();
-		}
-	};
+	that.setup = function() {
+		console.log("Setup Pacific");
+	}
+	that.update = function() {
+		console.log("update");
+		that.draw();
+		requestAnimFrame(that.update);
+	}
+	that.draw = function() {
+		console.log("draw");
+	}
+	that.run = function() {
+		console.log("Running Pacific");
+		var canvas = document.getElementById("pacific");
+		context = canvas.getContext('2d');
+		context.fillStyle = "rgb(200,0,0)";
+		context.fillRect( 50, 10, 100, 100 );
+		that.update();
+	}
+	
+	return that;
 }();
 
 $(document).ready( function(){
 	console.log("Ready for action, mister");
+	for( var i in pacific ){
+		console.log( i + " : " + pacific[i])
+	}
 	pacific.setup();
 	pacific.run();
 	console.log( pacific.value );
