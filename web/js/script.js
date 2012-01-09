@@ -19,7 +19,7 @@ var createParticle = function ( startX, startY ) {
 		},
 		draw: function (context) {
 			context.fillStyle = style;
-			context.fillRect( x, y, 4, 4 );
+			context.fillRect( x, y, 12, 12 );
 		}
 	};
 };
