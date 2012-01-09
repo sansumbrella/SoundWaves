@@ -264,7 +264,13 @@ td { vertical-align: top; }
 .clearfix:after { clear: both; }
 .clearfix { *zoom: 1; }
 
-
+#pacific{
+	width: 100%;
+	height: 100%;
+	position:fixed;
+	left:0;
+	top:0;
+}
 
 /* ==|== print styles =======================================================
    Print styles.

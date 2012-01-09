@@ -2,3 +2,4 @@ SoundWaves
 Visualization and sonification of buoy data off the Pacific Coast.
 Collisions with the coast or with the user's cursor/fingers interrupt
 the waves and trigger audio. Audio is modulated by the wave data.
+

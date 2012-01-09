@@ -4,3 +4,6 @@ build
 *.xcuserstate
 .svn
 .DS_Store
+data/
+design/
+*~

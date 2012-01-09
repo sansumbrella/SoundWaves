@@ -40,8 +40,8 @@ var pacific = function () {
 	var app = {};
 	var context;
 	var particles = [];
-	var w = 640;
-	var h = 480;
+	var w = 960;
+	var h = 540;
 	var fillStyle = "rgb(255,200,255)";
 	
 	var createParticles = function(){
@@ -55,6 +55,9 @@ var pacific = function () {
 	
 	// public interface
 	app.setup = function() {
+		// get window width and height
+		w = $(window).width();
+		h = $(window).height();
 		var canvas = document.getElementById("pacific");
 		canvas.width = w;
 		canvas.height = h;
