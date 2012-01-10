@@ -25,7 +25,7 @@ var Station = function(system, startX, startY){
 		draw: function(context){
 			context.fillStyle = style;
 			context.font = "12pt Helvetica";
-			context.fillText("128.004,76.012", x, y);
+			context.fillText("Arena Cove", x, y);
 		}
 	};
 };
@@ -57,8 +57,28 @@ var Particle = function ( startX, startY ) {
 		isDead: function(){
 			return life < 1;
 		}
-	};
-};
+	}
+}
+
+// curry for error handling
+function onError(location){
+	return function(err){
+		console.log( location + ": " + err );
+	}
+}
+
+function loadSound(url, context, outputBuffer){
+	var request = new XMLHttpRequest();
+	request.open('GET', url, true);
+	request.responseType = 'arraybuffer';
+	
+	request.onload = function(){
+		context.decodeAudioData(request.response, function(buffer){
+			outputBuffer = buffer;
+		}, onError("loadSound") );
+	}
+	request.send();
+}
 
 window.requestAnimFrame = (function(){
       return  window.requestAnimationFrame       || 
@@ -75,6 +95,7 @@ var pacific = function () {
 	// private members
 	var app = {};
 	var context;
+	var audioContext;
 	var particles = [];
 	var emitters = [];
 	var w = 960;
@@ -96,7 +117,16 @@ var pacific = function () {
 		canvas.width = w;
 		canvas.height = h;
 		context = canvas.getContext('2d');
-
+		
+		try{
+			audioContext = new webkitAudioContext();
+		} catch (e) {
+			console.log("no audio in this browser...");
+		}
+		
+		if(audioContext){
+			// loadSound("assets/mp3.mp3", audioContext);
+		}
 		createEmitters();
 	}
 	app.update = function() {
@@ -133,9 +163,6 @@ var pacific = function () {
 }();
 
 $(document).ready( function(){
-	for( var i in pacific ){
-		console.log( i + " : " + pacific[i])
-	}
 	pacific.setup();
 	pacific.run();
 })
