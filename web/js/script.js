@@ -75,9 +75,17 @@ function loadSound(url, context, outputBuffer){
 	request.onload = function(){
 		context.decodeAudioData(request.response, function(buffer){
 			outputBuffer = buffer;
+			playSound(context, buffer);
 		}, onError("loadSound") );
 	}
 	request.send();
+}
+
+function playSound(context, buffer){
+	var source = context.createBufferSource();
+	source.buffer = buffer;
+	source.connect( context.destination );
+	source.noteOn(0);
 }
 
 window.requestAnimFrame = (function(){
@@ -96,6 +104,7 @@ var pacific = function () {
 	var app = {};
 	var context;
 	var audioContext;
+	var audioBuffer;
 	var particles = [];
 	var emitters = [];
 	var w = 960;
@@ -125,7 +134,7 @@ var pacific = function () {
 		}
 		
 		if(audioContext){
-			// loadSound("assets/mp3.mp3", audioContext);
+			loadSound("data/feist.mp3", audioContext, audioBuffer);
 		}
 		createEmitters();
 	}
