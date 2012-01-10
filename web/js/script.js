@@ -2,7 +2,28 @@
 
 */
 
-var createParticle = function ( startX, startY ) {
+var Station = function(startX, startY){
+	var x = startX;
+	var y = startY;
+	var style = "rgb(55,55,55)";
+	
+	var emit = function(){
+		
+	};
+	
+	return {
+		update: function(){
+			
+		},
+		draw: function(context){
+			context.fillStyle = style;
+			context.font = "12pt Helvetica";
+			context.fillText("128.004,76.012", x, y);
+		}
+	};
+};
+
+var Particle = function ( startX, startY ) {
 	var x = startX;
 	var y = startY;
 	var vx = 0;
@@ -40,6 +61,7 @@ var pacific = function () {
 	var app = {};
 	var context;
 	var particles = [];
+	var emitters = [];
 	var w = 960;
 	var h = 540;
 	var fillStyle = "rgb(255,200,255)";
@@ -49,7 +71,12 @@ var pacific = function () {
 		console.log("Creating particles");
 		
 		for( var i = 0; i != 10; ++i ){
-			particles.push( createParticle( Math.random()*w, Math.random()*h/2 ) );
+			particles.push( Particle( Math.random()*w, Math.random()*h/2 ) );
+		}
+	}
+	var createEmitters = function(){
+		for( var i = 0; i != 10; ++i ){
+			emitters.push( Station( Math.random() * w * 0.5, Math.random() * h ) );
 		}
 	}
 	
@@ -63,6 +90,7 @@ var pacific = function () {
 		canvas.height = h;
 		context = canvas.getContext('2d');
 		createParticles();
+		createEmitters();
 	}
 	app.update = function() {
 		context.fillStyle = fillStyle;
@@ -70,12 +98,18 @@ var pacific = function () {
 		for( var i in particles ){
 			particles[i].update();
 		}
+		for( var i in emitters ){
+			emitters[i].update();
+		}
 		app.draw();
 		requestAnimFrame(app.update);
 	}
 	app.draw = function() {
 		for( var i in particles ){
 			particles[i].draw(context);
+		}
+		for( var i in emitters ){
+			emitters[i].draw(context);
 		}
 	}
 	app.run = function() {
