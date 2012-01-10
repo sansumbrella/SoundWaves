@@ -2,18 +2,25 @@
 
 */
 
-var Station = function(startX, startY){
+var Station = function(system, startX, startY){
+	var particleSystem = system;
 	var x = startX;
 	var y = startY;
 	var style = "rgb(55,55,55)";
+	var frequency = 2000 + Math.random() * 5000;
+	var time = new Date().getTime();
 	
 	var emit = function(){
-		
+		particleSystem.push( Particle(x, y) );
 	};
 	
 	return {
 		update: function(){
-			
+			var now = new Date().getTime();
+			if( now - time > frequency ){
+				emit();
+				time = now;
+			}
 		},
 		draw: function(context){
 			context.fillStyle = style;
@@ -28,7 +35,8 @@ var Particle = function ( startX, startY ) {
 	var y = startY;
 	var vx = 0;
 	var vy = 1;
-	var style = "rgb(200,200,0)";
+	var style = "rgb(0,0,0)";
+	var life = 100;
 	return {
 		setPos: function(tx, ty){
 			x = tx;
@@ -37,10 +45,17 @@ var Particle = function ( startX, startY ) {
 		update: function () {
 			x += vx;
 			y += vy;
+			life -= 1;
 		},
 		draw: function (context) {
 			context.fillStyle = style;
-			context.fillRect( x, y, 12, 12 );
+			// context.fillRect( x, y, 6, 6 );
+			context.beginPath();
+			context.arc(x, y, 6, 0, 360);
+			context.fill();
+		},
+		isDead: function(){
+			return life < 1;
 		}
 	};
 };
@@ -64,19 +79,11 @@ var pacific = function () {
 	var emitters = [];
 	var w = 960;
 	var h = 540;
-	var fillStyle = "rgb(255,200,255)";
+	var fillStyle = "rgb(200,200,220)";
 	
-	var createParticles = function(){
-		console.log("Yo, got some context: " + context);
-		console.log("Creating particles");
-		
-		for( var i = 0; i != 10; ++i ){
-			particles.push( Particle( Math.random()*w, Math.random()*h/2 ) );
-		}
-	}
 	var createEmitters = function(){
 		for( var i = 0; i != 10; ++i ){
-			emitters.push( Station( Math.random() * w * 0.5, Math.random() * h ) );
+			emitters.push( Station( particles, Math.random() * w * 0.5, Math.random() * h ) );
 		}
 	}
 	
@@ -89,7 +96,7 @@ var pacific = function () {
 		canvas.width = w;
 		canvas.height = h;
 		context = canvas.getContext('2d');
-		createParticles();
+
 		createEmitters();
 	}
 	app.update = function() {
@@ -100,6 +107,11 @@ var pacific = function () {
 		}
 		for( var i in emitters ){
 			emitters[i].update();
+		}
+		for( var i = particles.length - 1; i >= 0; --i ){
+			if( particles[i].isDead() ){
+				particles.splice(i,1);
+			}
 		}
 		app.draw();
 		requestAnimFrame(app.update);
